@@ -228,9 +228,10 @@ int main(int argc, char* argv[])
 		glUseProgram(program);
 
 		mat4x4 p;
-		mat4x4_ortho(p, -ratio + 0.2f, ratio + 0.2f, -ratio + 0.2f, ratio + 0.2f, 1.f, -1.f);
+		// mat4x4_ortho(p, -ratio + 0.2f, ratio + 0.2f, -ratio + 0.2f, ratio + 0.2f, 1.f, -1.f);
+		mat4x4_ortho(p, -ratio, ratio, -ratio, ratio, 1.f, -1.f);
 		glUniformMatrix4fv(p_location, 1, GL_FALSE, (const GLfloat*)p);
-		ratio *= (ratio <= 0.05f) ? 1.0f : 0.9995f;
+		// ratio *= (ratio <= 0.05f) ? 1.0f : 0.9995f;
 
 		glBindVertexArray(vertex_array);
 		glDrawArrays(GL_QUADS, 0, 4);
