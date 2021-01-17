@@ -61,6 +61,14 @@ namespace
 		in vec3 v_Position;
 		in vec2 v_ComplexValue;
 
+		// All components are in the range [0…1], including hue.
+		vec3 hsv2rgb(vec3 c)
+		{
+			vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+			vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+			return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+		}
+
 		vec2 squareImaginary(vec2 number){
 			return vec2(
 				pow(number.x,2)-pow(number.y,2),
@@ -79,19 +87,23 @@ namespace
 			{
 				z = squareImaginary(z) + v_ComplexValue;
 
-				if(length(z) > 2)
+				if(length(z) > 64)
 				{
-					return float(iteration) / maxIterations;
+					return float(iteration - log(length(z))/log(16.0f)) / maxIterations;
 				}
 			}
-			return maxIterations;
+			return 0.0f;
 		}
 
 		void main()
 		{
 			float intensity = iterateMandebrot();
 
-		    color = vec4(intensity, intensity, intensity, 1.0f);
+			// vec3 rgb = vec3(intensity);
+			// color = vec4(rgb, 1.0f);
+
+			vec3 hsv = ceil(intensity) * hsv2rgb(vec3(intensity, 1.0f, 1.0f));
+		    color = vec4(hsv, 1.0f);
 		}
 	)";
 }
@@ -231,7 +243,7 @@ int main(int argc, char* argv[])
 		// mat4x4_ortho(p, -ratio + 0.2f, ratio + 0.2f, -ratio + 0.2f, ratio + 0.2f, 1.f, -1.f);
 		mat4x4_ortho(p, -ratio, ratio, -ratio, ratio, 1.f, -1.f);
 		glUniformMatrix4fv(p_location, 1, GL_FALSE, (const GLfloat*)p);
-		// ratio *= (ratio <= 0.05f) ? 1.0f : 0.9995f;
+		// ratio *= (ratio <= 0.03f) ? 1.0f : 0.9995f;
 
 		glBindVertexArray(vertex_array);
 		glDrawArrays(GL_QUADS, 0, 4);
