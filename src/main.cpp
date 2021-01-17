@@ -132,8 +132,7 @@ static void glInit()
 		std::cerr << "Failed to initialize glad!\n";
 	}
 
-	glfwSwapInterval(0);
-	// glfwSwapInterval(1);
+	glfwSwapInterval(1);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -222,7 +221,6 @@ static void glInit()
 
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
-
 }
 
 int main(int argc, char* argv[])
@@ -230,6 +228,8 @@ int main(int argc, char* argv[])
 	glInit();
 
 	float ratio = 1.0f;
+	vec2 offset;
+	offset[0] = offset[1] = 0.0f;
 	GLint p_location = glGetUniformLocation(program, "P");
 
 	while (!glfwWindowShouldClose(window))
@@ -237,13 +237,27 @@ int main(int argc, char* argv[])
 		glClearColor(0.1f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+			ratio *= (ratio <= 0.0001f) ? 1.0f : 0.9995f;
+		else if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+			ratio /= (ratio >= 1.0f) ? 1.0f : 0.9995f;
+
+		if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			offset[1] -= 0.0015f * ratio;
+		else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			offset[1] += 0.0015f * ratio;
+		if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			offset[0] += 0.0015f * ratio;
+		else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			offset[0] -= 0.0015f * ratio;
+
 		glUseProgram(program);
 
 		mat4x4 p;
-		// mat4x4_ortho(p, -ratio + 0.2f, ratio + 0.2f, -ratio + 0.2f, ratio + 0.2f, 1.f, -1.f);
-		mat4x4_ortho(p, -ratio, ratio, -ratio, ratio, 1.f, -1.f);
+		mat4x4_ortho(p, 
+			-ratio - offset[0], ratio - offset[0], -ratio - offset[1], ratio - offset[1], 
+			1.f, -1.f);
 		glUniformMatrix4fv(p_location, 1, GL_FALSE, (const GLfloat*)p);
-		// ratio *= (ratio <= 0.03f) ? 1.0f : 0.9995f;
 
 		glBindVertexArray(vertex_array);
 		glDrawArrays(GL_QUADS, 0, 4);
