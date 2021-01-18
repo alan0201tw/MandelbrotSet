@@ -37,7 +37,7 @@ project "MandelbrotSet"
 
     libdirs
     {
-		"vendor/lib"
+        "vendor/lib"
     }
 
     filter "system:linux"
@@ -61,11 +61,13 @@ project "MandelbrotSet"
             "_USE_MATH_DEFINES"
         }
 
-        links
-        {
-            "opengl32",
-            "glfw3"
-        }
+        linkoptions { "opengl32.lib glfw3.lib" }
+
+        -- links
+        -- {
+        --     "opengl32",
+        --     "glfw3"
+        -- }
 
     filter { "configurations:Debug" }
         symbols "On"
