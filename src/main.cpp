@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
 		float timeStep = static_cast<float>(currentTime - previousTime);
 		previousTime = currentTime;
 
-		glClearColor(0.1f, 0.1f, 0.1f, 1);
+		glClearColor(1.0f, 0.0f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
