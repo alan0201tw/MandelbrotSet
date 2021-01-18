@@ -1,6 +1,6 @@
 workspace "MandelbrotSet"
     architecture "x64"
-    startproject "EvoLisa"
+    startproject "MandelbrotSet"
 
     configurations
     {

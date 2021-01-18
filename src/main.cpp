@@ -232,24 +232,29 @@ int main(int argc, char* argv[])
 	offset[0] = offset[1] = 0.0f;
 	GLint p_location = glGetUniformLocation(program, "P");
 
+	double previousTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
+		double currentTime = glfwGetTime();
+		float timeStep = static_cast<float>(currentTime - previousTime);
+		previousTime = currentTime;
+
 		glClearColor(0.1f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-			ratio *= (ratio <= 0.0001f) ? 1.0f : 0.9995f;
+			ratio -= (ratio <= 0.0001f) ? 0.0f : timeStep * ratio;
 		else if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-			ratio /= (ratio >= 1.0f) ? 1.0f : 0.9995f;
+			ratio += (ratio >= 1.0f) ? 0.0f : timeStep * ratio;
 
 		if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			offset[1] -= 0.0015f * ratio;
+			offset[1] -= timeStep * ratio;
 		else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			offset[1] += 0.0015f * ratio;
+			offset[1] += timeStep * ratio;
 		if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			offset[0] += 0.0015f * ratio;
+			offset[0] += timeStep * ratio;
 		else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			offset[0] -= 0.0015f * ratio;
+			offset[0] -= timeStep * ratio;
 
 		glUseProgram(program);
 
