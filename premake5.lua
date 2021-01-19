@@ -17,7 +17,6 @@ project "MandelbrotSet"
     location "."
     kind "ConsoleApp"
     language "C++"
-    toolset "clang"
     staticruntime "off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -43,6 +42,7 @@ project "MandelbrotSet"
     filter "system:linux"
         cppdialect "C++17"
         systemversion "latest"
+        toolset "clang"
         links
         {
             "GL",
@@ -61,13 +61,13 @@ project "MandelbrotSet"
             "_USE_MATH_DEFINES"
         }
 
-        linkoptions { "opengl32.lib glfw3.lib" }
+        -- linkoptions { "opengl32.lib glfw3.lib" }
 
-        -- links
-        -- {
-        --     "opengl32",
-        --     "glfw3"
-        -- }
+        links
+        {
+            "opengl32",
+            "glfw3"
+        }
 
     filter { "configurations:Debug" }
         symbols "On"
