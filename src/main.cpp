@@ -76,6 +76,14 @@ namespace
 			);
 		}
 
+		vec2 mulImaginary(vec2 lhs, vec2 rhs)
+		{
+			return vec2(
+				lhs.x * rhs.x - lhs.y * rhs.y,
+				lhs.x * rhs.y + lhs.y * rhs.x
+			);
+		}
+
 		float iterateMandebrot()
 		{
 			const int maxIterations = 100;
@@ -85,7 +93,9 @@ namespace
 
 			for(iteration = 0; iteration < maxIterations; ++iteration)
 			{
-				z = squareImaginary(z) + v_ComplexValue;
+				// z = squareImaginary(z) + v_ComplexValue;
+				z = mulImaginary(squareImaginary(z), z) + v_ComplexValue;
+				// z = squareImaginary(squareImaginary(z)) + v_ComplexValue;
 
 				if(length(z) > 64)
 				{
